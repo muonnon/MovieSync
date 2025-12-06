@@ -1,8 +1,7 @@
 //프로젝트 이름 : MovieSync
 //개발자 : 권미리
 //개발 기간: 2025.12.01 ~ 2025.12.13
-
-// 영화진흥위원회 API 호출 및 XML 파싱 클래스 (Thread)
+// 영화진흥위원회(KOFIC) API 호출 및 XML 파싱 클래스
 
 import java.io.*;
 import java.net.*;
@@ -13,14 +12,22 @@ import java.util.TimerTask;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 
+/**
+ * 영화진흥위원회 Open API를 호출하여 박스오피스 데이터를 가져오는 클래스
+ * Thread를 상속받아 백그라운드에서 주기적으로 데이터를 갱신한다
+ */
 public class APIManager extends Thread {
-    private static final String API_KEY = "ebd2ef0243c007f60e7f197614e7ce88";
+    // API 연결 정보
+    private static final String API_KEY = "ebd2ef0243c007f60e7f197614e7ce88";  // KOFIC API 키
     private static final String API_URL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.xml";
     
-    private DatabaseManager dbManager;
-    private boolean running = true;
+    private DatabaseManager dbManager;  // DB 관리자
+    private boolean running = true;      // 스레드 실행 상태
     
-    // 생성자
+    /**
+     * 생성자
+     * @param dbManager 데이터베이스 관리자 객체
+     */
     public APIManager(DatabaseManager dbManager) {
         this.dbManager = dbManager;
     }

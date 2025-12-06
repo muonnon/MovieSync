@@ -7,11 +7,18 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * SQLite 데이터베이스를 관리하는 클래스
+ * Users, Movies, Reviews, Bookmarks 테이블을 생성하고 쿼리를 실행한다
+ */
 public class DatabaseManager {
-    private static final String DB_URL = "jdbc:sqlite:moviesync.db";
-    private Connection conn = null;
+    // 데이터베이스 연결 정보
+    private static final String DB_URL = "jdbc:sqlite:moviesync.db";  // SQLite DB 파일 경로
+    private Connection conn = null;  // DB 연결 객체
     
-    // 생성자 - DB 연결 및 테이블 생성
+    /**
+     * 생성자 - DB 연결 및 테이블 생성
+     */
     public DatabaseManager() {
         try {
             // SQLite JDBC 드라이버 로드

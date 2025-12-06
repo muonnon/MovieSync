@@ -1,27 +1,38 @@
 //프로젝트 이름 : MovieSync
 //개발자 : 권미리
 //개발 기간: 2025.12.01 ~ 2025.12.13
-// 메인 프레임 GUI (JTree 메뉴 + CardLayout)
+// 메인 프레임 GUI - JTree 메뉴와 CardLayout을 이용한 화면 전환
 
 import javax.swing.*;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * 로그인 후 보여지는 메인 화면
+ * 왼쪽에 JTree 메뉴, 오른쪽에 CardLayout으로 화면 전환
+ */
 public class MainFrame extends JFrame {
-    private Client client;
-    private String username;
+    // 서버 통신 관련
+    private Client client;      // 서버와 통신하는 클라이언트
+    private String username;    // 로그인한 사용자 닉네임
     
-    private JTree menuTree;
-    private JPanel contentPanel;
-    private CardLayout cardLayout;
+    // GUI 컴포넌트
+    private JTree menuTree;         // 왼쪽 메뉴 트리
+    private JPanel contentPanel;    // 오른쪽 컨텐츠 영역
+    private CardLayout cardLayout;  // 화면 전환을 위한 레이아웃
     
-    // 각 화면 패널들
-    private MovieListPanel movieListPanel;
-    private ChatPanel chatPanel;
-    private ReviewPanel reviewPanel;
-    private BookmarkPanel bookmarkPanel;
+    // 각 화면 패널들 (메뉴에 따라 전환됨)
+    private MovieListPanel movieListPanel;   // 영화 목록 화면
+    private ChatPanel chatPanel;             // 채팅방 화면
+    private ReviewPanel reviewPanel;         // 감상평 화면
+    private BookmarkPanel bookmarkPanel;     // 북마크 화면
     
+    /**
+     * 생성자 - 메인 화면 초기화
+     * @param client 서버 통신 객체
+     * @param username 로그인한 사용자 닉네임
+     */
     public MainFrame(Client client, String username) {
         this.client = client;
         this.username = username;
@@ -54,7 +65,13 @@ public class MainFrame extends JFrame {
         logoutButton.setBackground(Color.WHITE);
         logoutButton.setForeground(new Color(33, 150, 243));
         logoutButton.setFocusPainted(false);
-        logoutButton.addActionListener(e -> logout());
+        // 로그아웃 버튼 클릭 이벤트 설정
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                logout();
+            }
+        });
         
         userPanel.add(userLabel);
         userPanel.add(logoutButton);
@@ -89,14 +106,17 @@ public class MainFrame extends JFrame {
         // 첫 번째 노드 확장
         menuTree.expandRow(0);
         
-        // 트리 선택 리스너
-        menuTree.addTreeSelectionListener(e -> {
-            DefaultMutableTreeNode selectedNode = 
-                (DefaultMutableTreeNode) menuTree.getLastSelectedPathComponent();
-            
-            if (selectedNode != null && selectedNode.isLeaf()) {
-                String nodeName = selectedNode.toString();
-                handleMenuSelection(nodeName);
+        // 트리 선택 리스너 - 메뉴 클릭 시 화면 전환
+        menuTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+            @Override
+            public void valueChanged(javax.swing.event.TreeSelectionEvent e) {
+                DefaultMutableTreeNode selectedNode = 
+                    (DefaultMutableTreeNode) menuTree.getLastSelectedPathComponent();
+                
+                if (selectedNode != null && selectedNode.isLeaf()) {
+                    String nodeName = selectedNode.toString();
+                    handleMenuSelection(nodeName);
+                }
             }
         });
         

@@ -4,9 +4,21 @@
 // 서버가 클라이언트에게 보낼 메시지를 정의하는 클래스
 // 메시지 구분자: | (파이프)
 
+/**
+ * 서버 -> 클라이언트 메시지 빌더
+ * 프로토콜에 맞게 응답 메시지를 생성한다
+ * 형식: 태그|데이터|데이터|...|END
+ */
 public class MSGBuilder {
     
-    // LOGIN_OK|userId|닉네임 확인 완료|END
+    // ===== 로그인 관련 메시지 =====
+    
+    /**
+     * 로그인 성공 메시지 생성
+     * @param userId 부여된 사용자 ID
+     * @param username 닉네임
+     * @return LOGIN_OK|사용자ID|닉네임 확인 완료|END
+     */
     String loginOkMSG(int userId, String username) {
         return "LOGIN_OK|" + userId + "|" + username + " 확인 완료|END";
     }

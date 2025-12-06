@@ -4,9 +4,20 @@
 // 클라이언트가 서버에게 보낼 메시지를 정의하는 클래스
 // 메시지 구분자: | (파이프)
 
+/**
+ * 클라이언트 -> 서버 메시지 빌더
+ * 프로토콜에 맞게 요청 메시지를 생성한다
+ * 형식: 태그|데이터|데이터|...|END
+ */
 public class CMSGBuilder {
     
-    // LOGIN|닉네임|END
+    // ===== 로그인 관련 메시지 =====
+    
+    /**
+     * 로그인 메시지 생성
+     * @param username 사용할 닉네임
+     * @return LOGIN|닉네임|END
+     */
     public String loginMSG(String username) {
         return "LOGIN|" + username + "|END";
     }

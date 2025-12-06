@@ -6,12 +6,20 @@
 
 import java.util.StringTokenizer;
 
+/**
+ * 클라이언트로부터 받은 메시지를 파싱하는 클래스
+ * StringTokenizer를 사용하여 | 구분자로 메시지를 분리한다
+ */
 public class ReceivedMSGTokenizer {
-    StringTokenizer st;
-    MSGTable mt = new MSGTable();
-    private static final String DELIMITER = "|";
+    StringTokenizer st;                          // 메시지 분리용
+    MSGTable mt = new MSGTable();                // 메시지 태그 테이블
+    private static final String DELIMITER = "|"; // 구분자
     
-    // 메시지 타입을 감지함 (0~13)
+    /**
+     * 메시지 타입을 감지하여 번호로 반환 (0~13)
+     * @param _msg 수신된 메시지
+     * @return 메시지 타입 번호 (MSGTable 참고)
+     */
     public int detection(String _msg) {
         int result = -1;
         String tag;

@@ -1,30 +1,41 @@
 //프로젝트 이름 : MovieSync
 //개발자 : 권미리
 //개발 기간: 2025.12.01 ~ 2025.12.13
-
-// 클라이언트 메인 클래스
+// 클라이언트 메인 클래스 - 서버와 TCP 소켓으로 통신하는 클라이언트
 
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 
+/**
+ * 서버와 통신하는 클라이언트 클래스
+ * GUI와 콘솔 모드 모두 지원한다
+ */
 public class Client {
-    Socket mySocket = null;
-    String myUsername = null;
-    int myUserId = -1;
+    // 소켓 통신 관련
+    Socket mySocket = null;              // 서버 연결 소켓
+    String myUsername = null;            // 내 닉네임
+    int myUserId = -1;                   // 내 사용자 ID
     
-    // GUI 연동용 필드
-    DataOutputStream dataOutStream = null;
-    MessageListener msgListener = null;
-    CMSGBuilder cmb = new CMSGBuilder();
-    MessageCallback callback;  // package-private으로 변경 (MessageListener에서 접근)
+    // 데이터 송수신 관련
+    DataOutputStream dataOutStream = null;  // 데이터 출력 스트림
+    MessageListener msgListener = null;     // 메시지 수신 스레드
+    CMSGBuilder cmb = new CMSGBuilder();    // 클라이언트 메시지 빌더
     
-    // GUI에서 메시지를 받기 위한 인터페이스
+    // GUI 연동용 콜백 (package-private으로 MessageListener에서 접근 가능)
+    MessageCallback callback;
+    
+    /**
+     * GUI에서 서버 메시지를 받기 위한 콜백 인터페이스
+     */
     public interface MessageCallback {
         void onMessageReceived(String message);
     }
     
-    // GUI 콜백 설정 - MessageListener도 함께 업데이트
+    /**
+     * GUI 콜백 설정 - 서버로부터 메시지를 받으면 콜백 호출
+     * @param callback 메시지 수신 시 호출되는 콜백
+     */
     public void setMessageCallback(MessageCallback callback) {
         this.callback = callback;
         if (msgListener != null) {
@@ -34,7 +45,11 @@ public class Client {
     
     // ========== GUI용 메소드들 ==========
     
-    // 서버 연결
+    /**
+     * 서버에 연결하고 로그인 메시지를 전송한다
+     * @param username 사용할 닉네임
+     * @return 연결 성공 여부
+     */
     public boolean connectToServer(String username) {
         try {
             mySocket = new Socket("localhost", 55555);

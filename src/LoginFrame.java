@@ -1,28 +1,36 @@
 //프로젝트 이름 : MovieSync
 //개발자 : 권미리
 //개발 기간: 2025.12.01 ~ 2025.12.13
-// 로그인 화면 GUI
+// 로그인 화면 GUI - 사용자가 닉네임을 입력하고 서버에 연결하는 화면
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * 로그인 화면을 담당하는 클래스
+ * 사용자가 닉네임을 입력하고 서버에 연결할 수 있다
+ */
 public class LoginFrame extends JFrame {
-    private JTextField usernameField;
-    private JButton loginButton;
-    private Client client;
+    // GUI 컴포넌트들
+    private JTextField usernameField;  // 닉네임 입력 필드
+    private JButton loginButton;       // 연결 버튼
+    private Client client;             // 서버와 통신하는 클라이언트 객체
     
+    /**
+     * 생성자 - 로그인 화면 초기화
+     */
     public LoginFrame() {
+        // 기본 윈도우 설정
         setTitle("MovieSync - 로그인");
         setSize(400, 350);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // 화면 중앙에 배치
-        setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // X버튼 클릭시 프로그램 종료
+        setLocationRelativeTo(null);  // 화면 중앙에 배치
+        setResizable(false);  // 크기 고정
         
-        // 메인 패널
+        // 메인 패널 생성 - GridBagLayout으로 컴포넌트 배치
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
-        mainPanel.setBackground(Color.WHITE);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         
@@ -194,10 +202,17 @@ public class LoginFrame extends JFrame {
         }
     }
     
-    // 테스트용 main
+    /**
+     * 테스트용 main 메소드
+     * LoginFrame을 단독으로 실행할 때 사용
+     */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new LoginFrame();
+        // Swing 컴포넌트는 EDT(Event Dispatch Thread)에서 실행해야 함
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new LoginFrame();
+            }
         });
     }
 }

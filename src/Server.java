@@ -1,8 +1,7 @@
 //프로젝트 이름 : MovieSync
 //개발자 : 권미리
 //개발 기간: 2025.12.01 ~ 2025.12.13
-
-//서버 메인 클래스
+// 서버 메인 클래스 - TCP 소켓 서버로 클라이언트 연결을 처리하고 메시지를 중계
 
 import java.io.*;
 import java.net.*;
@@ -10,15 +9,26 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * MovieSync 서버 메인 클래스
+ * 클라이언트 연결을 수락하고, 각 클라이언트에게 메시지를 전달한다
+ * 데이터베이스와 API 매니저를 관리한다
+ */
 public class Server {
-    ServerSocket ss = null;
-    ArrayList<ConnectedClient> clients = new ArrayList<ConnectedClient>();
-    HashMap<String, ConnectedClient> clientMap = new HashMap<String, ConnectedClient>(); // username을 키로 사용
-    HashMap<String, ChatRoom> chatRooms = new HashMap<String, ChatRoom>(); // 채팅방 관리 (영화코드가 키)
+    ServerSocket ss = null;  // 서버 소켓 (포트 55555)
     
-    DatabaseManager dbManager; // DB 관리자
-    APIManager apiManager; // API 관리자
+    // 연결된 클라이언트 관리
+    ArrayList<ConnectedClient> clients = new ArrayList<ConnectedClient>();  // 연결된 클라이언트 목록
+    HashMap<String, ConnectedClient> clientMap = new HashMap<String, ConnectedClient>();  // 닉네임으로 클라이언트 검색
+    HashMap<String, ChatRoom> chatRooms = new HashMap<String, ChatRoom>();  // 채팅방 목록 (키: 영화코드)
     
+    DatabaseManager dbManager;  // 데이터베이스 관리자
+    APIManager apiManager;      // 영화진흥위원회 API 관리자
+    
+    /**
+     * 서버 메인 메소드
+     * DB 초기화 -> API 매니저 시작 -> 클라이언트 연결 대기
+     */
     public static void main(String[] args) {
         Server server = new Server();
         try {
