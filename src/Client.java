@@ -17,16 +17,19 @@ public class Client {
     DataOutputStream dataOutStream = null;
     MessageListener msgListener = null;
     CMSGBuilder cmb = new CMSGBuilder();
-    private MessageCallback callback;
+    MessageCallback callback;  // package-private으로 변경 (MessageListener에서 접근)
     
     // GUI에서 메시지를 받기 위한 인터페이스
     public interface MessageCallback {
         void onMessageReceived(String message);
     }
     
-    // GUI 콜백 설정
+    // GUI 콜백 설정 - MessageListener도 함께 업데이트
     public void setMessageCallback(MessageCallback callback) {
         this.callback = callback;
+        if (msgListener != null) {
+            msgListener.setCallback(callback);
+        }
     }
     
     // ========== GUI용 메소드들 ==========
@@ -44,7 +47,7 @@ public class Client {
             dataOutStream.writeUTF(cmb.loginMSG(username));
             
             // 메시지 수신 스레드 시작
-            msgListener = new MessageListener(mySocket, callback);
+            msgListener = new MessageListener(mySocket, this);
             msgListener.start();
             
             return true;
@@ -322,11 +325,16 @@ class MessageListener extends Thread {
     Socket socket;
     InputStream inStream;
     DataInputStream dataInStream;
-    Client.MessageCallback callback;
+    Client client;
     
-    MessageListener(Socket _s, Client.MessageCallback callback) {
+    MessageListener(Socket _s, Client client) {
         this.socket = _s;
-        this.callback = callback;
+        this.client = client;
+    }
+    
+    // 콜백 설정 메서드 (동적 업데이트용)
+    public void setCallback(Client.MessageCallback callback) {
+        // Client의 콜백을 직접 참조하므로 별도 저장 불필요
     }
     
     public void run() {
@@ -337,9 +345,9 @@ class MessageListener extends Thread {
             while (true) {
                 String msg = dataInStream.readUTF();
                 
-                // GUI 모드면 콜백으로 전달
-                if (callback != null) {
-                    callback.onMessageReceived(msg);
+                // Client의 현재 콜백으로 전달 (동적으로 변경된 콜백 참조)
+                if (client.callback != null) {
+                    client.callback.onMessageReceived(msg);
                 } else {
                     // 콘솔 모드면 직접 출력
                     parseAndDisplay(msg);
@@ -347,8 +355,8 @@ class MessageListener extends Thread {
             }
             
         } catch (IOException e) {
-            if (callback != null) {
-                callback.onMessageReceived("ERROR//서버와의 연결이 해제됨//END");
+            if (client.callback != null) {
+                client.callback.onMessageReceived("ERROR|서버와의 연결이 해제됨|END");
             } else {
                 System.out.println("\nClient> 서버와의 연결이 해제됨");
             }

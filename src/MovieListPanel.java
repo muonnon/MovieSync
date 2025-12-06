@@ -219,7 +219,7 @@ public class MovieListPanel extends JPanel {
             
         } else if (message.startsWith("MOVIES_DATA")) {
             // 영화 데이터 수신
-            String[] parts = message.split("//");
+            String[] parts = message.split("\\|");
             if (parts.length >= 7) {
                 MovieData movie = new MovieData();
                 movie.movieCd = parts[1];

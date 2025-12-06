@@ -2,7 +2,7 @@
 
 ## 개요
 
-MovieSync는 **TCP 소켓** 기반의 텍스트 프로토콜을 사용합니다. 모든 메시지는 `//`를 구분자로 사용하며, `END`로 종료됩니다.
+MovieSync는 **TCP 소켓** 기반의 텍스트 프로토콜을 사용합니다. 모든 메시지는 `|`(파이프)를 구분자로 사용하며, `END`로 종료됩니다.
 
 ### 기본 정보
 
@@ -11,7 +11,7 @@ MovieSync는 **TCP 소켓** 기반의 텍스트 프로토콜을 사용합니다.
 | **전송 방식** | TCP Socket |
 | **포트** | 55555 |
 | **인코딩** | UTF-8 (DataInputStream/DataOutputStream) |
-| **메시지 구분자** | `//` |
+| **메시지 구분자** | `\|` (파이프) |
 | **메시지 종료 마커** | `END` |
 
 ---
@@ -21,14 +21,14 @@ MovieSync는 **TCP 소켓** 기반의 텍스트 프로토콜을 사용합니다.
 ### 기본 구조
 
 ```
-[태그]//[데이터1]//[데이터2]//...//END
+[태그]|[데이터1]|[데이터2]|...|END
 ```
 
 ### 예시
 
 ```
-LOGIN//영화광//END
-MOVIES_DATA//20234567//위키드//1//2024-11-20//5000000//50000000000//END
+LOGIN|영화광|END
+MOVIES_DATA|20234567|위키드|1|2024-11-20|5000000|50000000000|END
 ```
 
 ---
@@ -59,7 +59,7 @@ MOVIES_DATA//20234567//위키드//1//2024-11-20//5000000//50000000000//END
 ### 0. LOGIN - 로그인
 
 ```
-LOGIN//닉네임//END
+LOGIN|닉네임|END
 ```
 
 | 필드 | 타입 | 설명 |
@@ -68,7 +68,7 @@ LOGIN//닉네임//END
 
 **예시:**
 ```
-LOGIN//영화광//END
+LOGIN|영화광|END
 ```
 
 ---
@@ -76,7 +76,7 @@ LOGIN//영화광//END
 ### 1. GET_MOVIES - 영화 목록 조회
 
 ```
-GET_MOVIES//END
+GET_MOVIES|END
 ```
 
 추가 필드 없음. 박스오피스 Top 10을 요청합니다.
@@ -86,7 +86,7 @@ GET_MOVIES//END
 ### 2. GET_DETAIL - 영화 상세 조회
 
 ```
-GET_DETAIL//영화코드//END
+GET_DETAIL|영화코드|END
 ```
 
 | 필드 | 타입 | 설명 |
@@ -95,7 +95,7 @@ GET_DETAIL//영화코드//END
 
 **예시:**
 ```
-GET_DETAIL//20234567//END
+GET_DETAIL|20234567|END
 ```
 
 ---
@@ -103,7 +103,7 @@ GET_DETAIL//20234567//END
 ### 3. JOIN_ROOM - 채팅방 입장
 
 ```
-JOIN_ROOM//영화코드//영화제목//END
+JOIN_ROOM|영화코드|영화제목|END
 ```
 
 | 필드 | 타입 | 설명 |
@@ -113,7 +113,7 @@ JOIN_ROOM//영화코드//영화제목//END
 
 **예시:**
 ```
-JOIN_ROOM//20234567//위키드//END
+JOIN_ROOM|20234567|위키드|END
 ```
 
 ---
@@ -121,7 +121,7 @@ JOIN_ROOM//20234567//위키드//END
 ### 4. LEAVE_ROOM - 채팅방 퇴장
 
 ```
-LEAVE_ROOM//영화코드//END
+LEAVE_ROOM|영화코드|END
 ```
 
 | 필드 | 타입 | 설명 |
@@ -133,7 +133,7 @@ LEAVE_ROOM//영화코드//END
 ### 5. CHAT - 채팅 메시지 전송
 
 ```
-CHAT//영화코드//메시지//END
+CHAT|영화코드|메시지|END
 ```
 
 | 필드 | 타입 | 설명 |
@@ -143,7 +143,7 @@ CHAT//영화코드//메시지//END
 
 **예시:**
 ```
-CHAT//20234567//이 영화 정말 재밌어요!//END
+CHAT|20234567|이 영화 정말 재밌어요!|END
 ```
 
 ---
@@ -151,7 +151,7 @@ CHAT//20234567//이 영화 정말 재밌어요!//END
 ### 6. GET_REVIEWS - 감상평 조회
 
 ```
-GET_REVIEWS//영화코드//END
+GET_REVIEWS|영화코드|END
 ```
 
 | 필드 | 타입 | 설명 |
@@ -163,7 +163,7 @@ GET_REVIEWS//영화코드//END
 ### 7. SUBMIT_REVIEW - 감상평 작성
 
 ```
-SUBMIT_REVIEW//영화코드//별점//감상평내용//END
+SUBMIT_REVIEW|영화코드|별점|감상평내용|END
 ```
 
 | 필드 | 타입 | 설명 |
@@ -174,7 +174,7 @@ SUBMIT_REVIEW//영화코드//별점//감상평내용//END
 
 **예시:**
 ```
-SUBMIT_REVIEW//20234567//5//정말 감동적인 영화였습니다!//END
+SUBMIT_REVIEW|20234567|5|정말 감동적인 영화였습니다!|END
 ```
 
 ---
@@ -182,7 +182,7 @@ SUBMIT_REVIEW//20234567//5//정말 감동적인 영화였습니다!//END
 ### 8. DELETE_REVIEW - 감상평 삭제
 
 ```
-DELETE_REVIEW//reviewId//END
+DELETE_REVIEW|reviewId|END
 ```
 
 | 필드 | 타입 | 설명 |
@@ -194,7 +194,7 @@ DELETE_REVIEW//reviewId//END
 ### 9. SEARCH_MOVIE - 영화 검색
 
 ```
-SEARCH_MOVIE//검색어//END
+SEARCH_MOVIE|검색어|END
 ```
 
 | 필드 | 타입 | 설명 |
@@ -206,7 +206,7 @@ SEARCH_MOVIE//검색어//END
 ### 10. ADD_BOOKMARK - 북마크 추가
 
 ```
-ADD_BOOKMARK//영화코드//END
+ADD_BOOKMARK|영화코드|END
 ```
 
 | 필드 | 타입 | 설명 |
@@ -218,7 +218,7 @@ ADD_BOOKMARK//영화코드//END
 ### 11. DELETE_BOOKMARK - 북마크 삭제
 
 ```
-DELETE_BOOKMARK//영화코드//END
+DELETE_BOOKMARK|영화코드|END
 ```
 
 | 필드 | 타입 | 설명 |
@@ -230,7 +230,7 @@ DELETE_BOOKMARK//영화코드//END
 ### 12. GET_BOOKMARKS - 북마크 목록 조회
 
 ```
-GET_BOOKMARKS//END
+GET_BOOKMARKS|END
 ```
 
 추가 필드 없음. 로그인한 사용자의 북마크 목록을 조회합니다.
@@ -240,7 +240,7 @@ GET_BOOKMARKS//END
 ### 13. DISCONNECT - 연결 종료
 
 ```
-DISCONNECT//END
+DISCONNECT|END
 ```
 
 추가 필드 없음. 서버와의 연결을 정상 종료합니다.
@@ -256,7 +256,7 @@ DISCONNECT//END
 #### LOGIN_OK - 로그인 성공
 
 ```
-LOGIN_OK//userId//닉네임 확인 완료//END
+LOGIN_OK|userId|닉네임 확인 완료|END
 ```
 
 | 필드 | 타입 | 설명 |
@@ -266,18 +266,18 @@ LOGIN_OK//userId//닉네임 확인 완료//END
 #### LOGIN_FAIL - 로그인 실패
 
 ```
-LOGIN_FAIL//에러메시지//END
+LOGIN_FAIL|에러메시지|END
 ```
 
 **예시:**
 ```
-LOGIN_FAIL//이미 사용 중인 닉네임입니다//END
+LOGIN_FAIL|이미 사용 중인 닉네임입니다|END
 ```
 
 #### WELCOME - 환영 메시지
 
 ```
-WELCOME//MovieSync에 오신 것을 환영합니다!//END
+WELCOME|MovieSync에 오신 것을 환영합니다!|END
 ```
 
 ---
@@ -287,13 +287,13 @@ WELCOME//MovieSync에 오신 것을 환영합니다!//END
 #### MOVIES_COUNT - 영화 개수
 
 ```
-MOVIES_COUNT//총개수//END
+MOVIES_COUNT|총개수|END
 ```
 
 #### MOVIES_DATA - 영화 데이터
 
 ```
-MOVIES_DATA//영화코드//영화제목//순위//개봉일//누적관객//누적매출//END
+MOVIES_DATA|영화코드|영화제목|순위|개봉일|누적관객|누적매출|END
 ```
 
 | 필드 | 타입 | 설명 |
@@ -307,13 +307,13 @@ MOVIES_DATA//영화코드//영화제목//순위//개봉일//누적관객//누적
 
 **예시:**
 ```
-MOVIES_DATA//20234567//위키드//1//2024-11-20//5000000//50000000000//END
+MOVIES_DATA|20234567|위키드|1|2024-11-20|5000000|50000000000|END
 ```
 
 #### MOVIES_END - 영화 목록 전송 완료
 
 ```
-MOVIES_END//END
+MOVIES_END|END
 ```
 
 ---
@@ -323,7 +323,7 @@ MOVIES_END//END
 #### DETAIL - 영화 상세 정보
 
 ```
-DETAIL//영화코드//영화제목//순위//개봉일//누적관객//누적매출//평균평점//END
+DETAIL|영화코드|영화제목|순위|개봉일|누적관객|누적매출|평균평점|END
 ```
 
 | 필드 | 타입 | 설명 |
@@ -337,7 +337,7 @@ DETAIL//영화코드//영화제목//순위//개봉일//누적관객//누적매�
 #### ROOM_OK - 채팅방 입장 성공
 
 ```
-ROOM_OK//roomId//영화제목//END
+ROOM_OK|roomId|영화제목|END
 ```
 
 | 필드 | 타입 | 설명 |
@@ -347,19 +347,19 @@ ROOM_OK//roomId//영화제목//END
 #### USER_JOIN - 사용자 입장 알림
 
 ```
-USER_JOIN//닉네임//현재인원//END
+USER_JOIN|닉네임|현재인원|END
 ```
 
 #### USER_LEFT - 사용자 퇴장 알림
 
 ```
-USER_LEFT//닉네임//현재인원//END
+USER_LEFT|닉네임|현재인원|END
 ```
 
 #### CHAT_ALL - 채팅 메시지 브로드캐스트
 
 ```
-CHAT_ALL//발신자//메시지//END
+CHAT_ALL|발신자|메시지|END
 ```
 
 ---
@@ -369,19 +369,19 @@ CHAT_ALL//발신자//메시지//END
 #### REV_SUMMARY - 감상평 요약
 
 ```
-REV_SUMMARY//영화코드//영화제목//평균평점//감상평개수//END
+REV_SUMMARY|영화코드|영화제목|평균평점|감상평개수|END
 ```
 
 #### REV_COUNT - 감상평 개수
 
 ```
-REV_COUNT//총개수//END
+REV_COUNT|총개수|END
 ```
 
 #### REV_DATA - 감상평 데이터
 
 ```
-REV_DATA//reviewId//작성자//별점//내용//작성일시//END
+REV_DATA|reviewId|작성자|별점|내용|작성일시|END
 ```
 
 | 필드 | 타입 | 설명 |
@@ -395,19 +395,19 @@ REV_DATA//reviewId//작성자//별점//내용//작성일시//END
 #### REV_END - 감상평 전송 완료
 
 ```
-REV_END//END
+REV_END|END
 ```
 
 #### REV_OK - 감상평 작성 성공
 
 ```
-REV_OK//reviewId//감상평이 저장되었습니다//END
+REV_OK|reviewId|감상평이 저장되었습니다|END
 ```
 
 #### REV_FAIL - 감상평 작성 실패
 
 ```
-REV_FAIL//에러메시지//END
+REV_FAIL|에러메시지|END
 ```
 
 ---
@@ -417,13 +417,13 @@ REV_FAIL//에러메시지//END
 #### DEL_OK - 삭제 성공
 
 ```
-DEL_OK//감상평이 삭제되었습니다//END
+DEL_OK|감상평이 삭제되었습니다|END
 ```
 
 #### DEL_FAIL - 삭제 실패
 
 ```
-DEL_FAIL//에러메시지//END
+DEL_FAIL|에러메시지|END
 ```
 
 ---
@@ -433,13 +433,13 @@ DEL_FAIL//에러메시지//END
 #### BOOKMARK_OK - 북마크 추가 성공
 
 ```
-BOOKMARK_OK//북마크가 추가되었습니다//END
+BOOKMARK_OK|북마크가 추가되었습니다|END
 ```
 
 #### BOOKMARK_DEL_OK - 북마크 삭제 성공
 
 ```
-BOOKMARK_DEL_OK//북마크가 삭제되었습니다//END
+BOOKMARK_DEL_OK|북마크가 삭제되었습니다|END
 ```
 
 ---
@@ -449,7 +449,7 @@ BOOKMARK_DEL_OK//북마크가 삭제되었습니다//END
 #### DISCONNECT_OK - 연결 종료 확인
 
 ```
-DISCONNECT_OK//연결이 종료되었습니다//END
+DISCONNECT_OK|연결이 종료되었습니다|END
 ```
 
 ---
@@ -459,7 +459,7 @@ DISCONNECT_OK//연결이 종료되었습니다//END
 #### ERROR - 일반 에러
 
 ```
-ERROR//에러메시지//END
+ERROR|에러메시지|END
 ```
 
 ---
@@ -471,11 +471,11 @@ ERROR//에러메시지//END
 ```
 [Client]                         [Server]
     │                               │
-    │──── LOGIN//영화광//END ──────▶│
+    │──── LOGIN|영화광|END ────────▶│
     │                               │ DB: 닉네임 중복 체크
     │                               │ DB: 사용자 생성
-    │◀─ LOGIN_OK//1//영화광 확인 ───│
-    │◀─ WELCOME//환영합니다!//END ──│
+    │◀── LOGIN_OK|1|영화광 확인 ───│
+    │◀── WELCOME|환영합니다!|END ──│
     │                               │
 ```
 
@@ -484,13 +484,13 @@ ERROR//에러메시지//END
 ```
 [Client]                         [Server]
     │                               │
-    │──── GET_MOVIES//END ─────────▶│
+    │──── GET_MOVIES|END ──────────▶│
     │                               │ DB: Top 10 조회
-    │◀─ MOVIES_COUNT//10//END ─────│
-    │◀─ MOVIES_DATA//...//END ─────│ (10회 반복)
-    │◀─ MOVIES_DATA//...//END ─────│
+    │◀── MOVIES_COUNT|10|END ──────│
+    │◀── MOVIES_DATA|...|END ──────│ (10회 반복)
+    │◀── MOVIES_DATA|...|END ──────│
     │         ...                   │
-    │◀─ MOVIES_END//END ───────────│
+    │◀── MOVIES_END|END ───────────│
     │                               │
 ```
 
@@ -499,12 +499,12 @@ ERROR//에러메시지//END
 ```
 [Client A]              [Server]              [Client B]
     │                      │                      │
-    │── JOIN_ROOM//... ───▶│                      │
-    │◀─ ROOM_OK//... ──────│                      │
-    │◀─ USER_JOIN//A//1 ───│──▶ USER_JOIN//A//1 ─▶│
+    │── JOIN_ROOM|... ────▶│                      │
+    │◀── ROOM_OK|... ──────│                      │
+    │◀── USER_JOIN|A|1 ────│───▶ USER_JOIN|A|1 ──▶│
     │                      │                      │
-    │── CHAT//...//Hi! ───▶│                      │
-    │◀─ CHAT_ALL//A//Hi! ──│──▶ CHAT_ALL//A//Hi! ─▶│
+    │── CHAT|...|Hi! ─────▶│                      │
+    │◀── CHAT_ALL|A|Hi! ───│───▶ CHAT_ALL|A|Hi! ─▶│
     │                      │                      │
 ```
 
@@ -531,6 +531,13 @@ switch(msgType) {
         break;
     // ...
 }
+```
+
+### 클라이언트 측 파싱
+
+```java
+// 메시지 구분자 | 사용 시 정규식 이스케이프 필요
+String[] parts = message.split("\\|");
 ```
 
 ### MSGTable 코드 참조

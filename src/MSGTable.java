@@ -3,21 +3,23 @@
 //개발 기간: 2025.12.01 ~ 2025.12.13
 
 /* 메세지 포맷 중 태그부분을 정의하는 클래스
+ * 메시지 구분자: | (파이프)
+ * 
  * Client > Server 메세지 포맷
-LOGIN//닉네임//END
-GET_MOVIES//END
-GET_DETAIL//영화코드//END
-JOIN_ROOM//영화코드//영화제목//END
-LEAVE_ROOM//영화코드//END
-CHAT//영화코드//메시지//END
-GET_REVIEWS//영화코드//END
-SUBMIT_REVIEW//영화코드//별점//감상평내용//END
-DELETE_REVIEW//reviewId//END
-SEARCH_MOVIE//검색어//END
-ADD_BOOKMARK//영화코드//END
-DELETE_BOOKMARK//영화코드//END
-GET_BOOKMARKS//END
-DISCONNECT//END
+LOGIN|닉네임|END
+GET_MOVIES|END
+GET_DETAIL|영화코드|END
+JOIN_ROOM|영화코드|영화제목|END
+LEAVE_ROOM|영화코드|END
+CHAT|영화코드|메시지|END
+GET_REVIEWS|영화코드|END
+SUBMIT_REVIEW|영화코드|별점|감상평내용|END
+DELETE_REVIEW|reviewId|END
+SEARCH_MOVIE|검색어|END
+ADD_BOOKMARK|영화코드|END
+DELETE_BOOKMARK|영화코드|END
+GET_BOOKMARKS|END
+DISCONNECT|END
 */
 
 public class MSGTable {

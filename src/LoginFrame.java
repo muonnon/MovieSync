@@ -14,9 +14,10 @@ public class LoginFrame extends JFrame {
     
     public LoginFrame() {
         setTitle("MovieSync - 로그인");
-        setSize(400, 300);
+        setSize(400, 350);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // 화면 중앙에 배치
+        setResizable(false);
         
         // 메인 패널
         JPanel mainPanel = new JPanel();
@@ -35,7 +36,7 @@ public class LoginFrame extends JFrame {
         mainPanel.add(titleLabel, gbc);
         
         // 부제목
-        JLabel subtitleLabel = new JLabel("실시간 영화 감상평 공유 ");
+        JLabel subtitleLabel = new JLabel("실시간 영화 감상평 공유 플랫폼");
         subtitleLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
         subtitleLabel.setForeground(Color.GRAY);
         gbc.gridy = 1;
@@ -54,12 +55,18 @@ public class LoginFrame extends JFrame {
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(usernameLabel, gbc);
         
-        // 닉네임 입력 필드
+        // 닉네임 입력 필드 - 스타일 개선
         usernameField = new JTextField(15);
         usernameField.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
-        usernameField.setPreferredSize(new Dimension(200, 30));
+        usernameField.setPreferredSize(new Dimension(200, 35));
+        usernameField.setMinimumSize(new Dimension(200, 35));
+        usernameField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+            BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         mainPanel.add(usernameField, gbc);
         
         // Enter 키로 로그인
@@ -70,17 +77,21 @@ public class LoginFrame extends JFrame {
             }
         });
         
-        // 로그인 버튼
+        // 로그인 버튼 - 스타일 개선
         loginButton = new JButton("연결하기");
         loginButton.setFont(new Font("맑은 고딕", Font.BOLD, 14));
         loginButton.setBackground(new Color(33, 150, 243));
         loginButton.setForeground(Color.WHITE);
         loginButton.setFocusPainted(false);
-        loginButton.setPreferredSize(new Dimension(200, 35));
+        loginButton.setPreferredSize(new Dimension(200, 40));
+        loginButton.setOpaque(true);
+        loginButton.setBorderPainted(false);
+        loginButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         gbc.gridx = 0;
         gbc.gridy = 4;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.NONE;
         mainPanel.add(loginButton, gbc);
         
         // 로그인 버튼 액션
@@ -168,7 +179,7 @@ public class LoginFrame extends JFrame {
         } else if (message.startsWith("LOGIN_FAIL")) {
             SwingUtilities.invokeLater(() -> {
                 // 로그인 실패
-                String[] parts = message.split("//");
+                String[] parts = message.split("\\|");
                 String reason = parts.length > 1 ? parts[1] : "알 수 없는 오류";
                 
                 JOptionPane.showMessageDialog(LoginFrame.this, 
