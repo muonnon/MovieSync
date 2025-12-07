@@ -161,13 +161,17 @@ public class LoginFrame extends JFrame {
         if (client.connectToServer(username)) {
             System.out.println("LoginFrame> 서버 연결 성공");
         } else {
-            SwingUtilities.invokeLater(() -> {
-                JOptionPane.showMessageDialog(LoginFrame.this, 
-                    "서버에 연결할 수 없습니다.\n서버가 실행 중인지 확인해주세요.", 
-                    "연결 실패", 
-                    JOptionPane.ERROR_MESSAGE);
-                loginButton.setEnabled(true);
-                loginButton.setText("연결하기");
+            // 연결 실패 시 UI 업데이트
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    JOptionPane.showMessageDialog(LoginFrame.this, 
+                        "서버에 연결할 수 없습니다.\n서버가 실행 중인지 확인해주세요.", 
+                        "연결 실패", 
+                        JOptionPane.ERROR_MESSAGE);
+                    loginButton.setEnabled(true);
+                    loginButton.setText("연결하기");
+                }
             });
         }
     }
@@ -178,26 +182,32 @@ public class LoginFrame extends JFrame {
         
         // LOGIN_OK 메시지 확인
         if (message.startsWith("LOGIN_OK")) {
-            SwingUtilities.invokeLater(() -> {
-                // 로그인 성공 - 메인 화면으로 전환
-                String username = usernameField.getText().trim();
-                new MainFrame(client, username);
-                dispose(); // 로그인 창 닫기
+            // 로그인 성공 - 메인 화면으로 전환
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    String username = usernameField.getText().trim();
+                    new MainFrame(client, username);
+                    dispose();  // 로그인 창 닫기
+                }
             });
         } else if (message.startsWith("LOGIN_FAIL")) {
-            SwingUtilities.invokeLater(() -> {
-                // 로그인 실패
-                String[] parts = message.split("\\|");
-                String reason = parts.length > 1 ? parts[1] : "알 수 없는 오류";
-                
-                JOptionPane.showMessageDialog(LoginFrame.this, 
-                    reason, 
-                    "로그인 실패", 
-                    JOptionPane.ERROR_MESSAGE);
-                
-                loginButton.setEnabled(true);
-                loginButton.setText("연결하기");
-                client.disconnect();
+            // 로그인 실패 - 에러 메시지 표시
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    String[] parts = message.split("\\|");
+                    String reason = parts.length > 1 ? parts[1] : "알 수 없는 오류";
+                    
+                    JOptionPane.showMessageDialog(LoginFrame.this, 
+                        reason, 
+                        "로그인 실패", 
+                        JOptionPane.ERROR_MESSAGE);
+                    
+                    loginButton.setEnabled(true);
+                    loginButton.setText("연결하기");
+                    client.disconnect();
+                }
             });
         }
     }
