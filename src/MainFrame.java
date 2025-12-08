@@ -50,7 +50,7 @@ public class MainFrame extends JFrame {
         topPanel.setBackground(new Color(33, 150, 243));
         topPanel.setPreferredSize(new Dimension(0, 60));
         
-        JLabel titleLabel = new JLabel("  🎬 MovieSync");
+        JLabel titleLabel = new JLabel("  MovieSync");
         titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 24));
         titleLabel.setForeground(Color.WHITE);
         topPanel.add(titleLabel, BorderLayout.WEST);
@@ -87,10 +87,10 @@ public class MainFrame extends JFrame {
         
         // JTree 생성
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("MovieSync");
-        DefaultMutableTreeNode moviesNode = new DefaultMutableTreeNode("🎬 영화 목록");
-        DefaultMutableTreeNode chatNode = new DefaultMutableTreeNode("💬 채팅방");
-        DefaultMutableTreeNode reviewNode = new DefaultMutableTreeNode("⭐ 감상평");
-        DefaultMutableTreeNode bookmarkNode = new DefaultMutableTreeNode("🔖 북마크");
+        DefaultMutableTreeNode moviesNode = new DefaultMutableTreeNode("영화 목록");
+        DefaultMutableTreeNode chatNode = new DefaultMutableTreeNode("채팅방");
+        DefaultMutableTreeNode reviewNode = new DefaultMutableTreeNode("감상평");
+        DefaultMutableTreeNode bookmarkNode = new DefaultMutableTreeNode("북마크");
         
         root.add(moviesNode);
         root.add(chatNode);

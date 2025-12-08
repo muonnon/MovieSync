@@ -35,7 +35,7 @@ public class LoginFrame extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         
         // 타이틀
-        JLabel titleLabel = new JLabel("🎬 MovieSync");
+        JLabel titleLabel = new JLabel("MovieSync");
         titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 28));
         titleLabel.setForeground(new Color(33, 150, 243)); // 파란색
         gbc.gridx = 0;

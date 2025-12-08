@@ -56,12 +56,12 @@ public class MovieListPanel extends JPanel {
         JPanel topPanel = new JPanel(new BorderLayout());
         
         // 헤더 레이블
-        JLabel headerLabel = new JLabel("📊 실시간 박스오피스 Top 10");
+        JLabel headerLabel = new JLabel("실시간 박스오피스 Top 10");
         headerLabel.setFont(new Font("맑은 고딕", Font.BOLD, 20));
         topPanel.add(headerLabel, BorderLayout.WEST);
         
         // 새로고침 버튼 - 클릭시 영화 목록 다시 로드
-        JButton refreshButton = new JButton("🔄 새로고침");
+        JButton refreshButton = new JButton("새로고침");
         refreshButton.setFocusPainted(false);
         refreshButton.addActionListener(new ActionListener() {
             @Override
@@ -160,7 +160,7 @@ public class MovieListPanel extends JPanel {
         
         // ----- 액션 버튼들 -----
         // 채팅방 입장 버튼
-        chatButton = new JButton("💬 채팅방 입장");
+        chatButton = new JButton("채팅방 입장");
         chatButton.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
         chatButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         chatButton.setMaximumSize(new Dimension(200, 40));
@@ -178,7 +178,7 @@ public class MovieListPanel extends JPanel {
         detailPanel.add(Box.createVerticalStrut(10));
         
         // 감상평 보기 버튼
-        reviewButton = new JButton("⭐ 감상평 보기");
+        reviewButton = new JButton("감상평 보기");
         reviewButton.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
         reviewButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         reviewButton.setMaximumSize(new Dimension(200, 40));
@@ -196,7 +196,7 @@ public class MovieListPanel extends JPanel {
         detailPanel.add(Box.createVerticalStrut(10));
         
         // 북마크 추가 버튼
-        bookmarkButton = new JButton("🔖 북마크 추가");
+        bookmarkButton = new JButton("북마크 추가");
         bookmarkButton.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
         bookmarkButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         bookmarkButton.setMaximumSize(new Dimension(200, 40));
@@ -240,9 +240,9 @@ public class MovieListPanel extends JPanel {
         
         // 상세 정보 레이블 업데이트
         titleLabel.setText(movie.movieNm);
-        rankLabel.setText("📊 순위: " + movie.rank + "위");
-        openDtLabel.setText("📅 개봉일: " + movie.openDt);
-        audiAccLabel.setText("👥 누적관객: " + String.format("%,d", movie.audiAcc) + "명");
+        rankLabel.setText("순위: " + movie.rank + "위");
+        openDtLabel.setText("개봉일: " + movie.openDt);
+        audiAccLabel.setText("누적관객: " + String.format("%,d", movie.audiAcc) + "명");
         
         // 버튼 활성화
         chatButton.setEnabled(true);
