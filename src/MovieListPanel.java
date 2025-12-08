@@ -8,6 +8,7 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * 영화 목록을 테이블로 표시하는 패널
@@ -37,6 +38,9 @@ public class MovieListPanel extends JPanel {
     // 선택된 영화 정보
     private String selectedMovieCd = null;   // 선택된 영화 코드
     private String selectedMovieNm = null;   // 선택된 영화 제목
+    
+    // 북마크한 영화 목록 (현재 세션에서 추가한 것만 저장)
+    private HashSet<String> bookmarkedMovies = new HashSet<String>();
     
     /**
      * 생성자 - 영화 목록 패널 초기화
@@ -206,6 +210,8 @@ public class MovieListPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if (selectedMovieCd != null) {
                     client.addBookmark(selectedMovieCd);
+                    // 북마크한 영화 목록에 추가
+                    bookmarkedMovies.add(selectedMovieCd);
                     // 북마크 추가 후 버튼 비활성화 (중복 추가 방지)
                     bookmarkButton.setEnabled(false);
                     bookmarkButton.setText("북마크 추가됨");
@@ -251,9 +257,16 @@ public class MovieListPanel extends JPanel {
         chatButton.setEnabled(true);
         reviewButton.setEnabled(true);
         
-        // 북마크 버튼 초기화 (다른 영화 선택 시 다시 활성화)
-        bookmarkButton.setEnabled(true);
-        bookmarkButton.setText("북마크 추가");
+        // 북마크 버튼 상태 설정 (이미 북마크한 영화인지 확인)
+        if (bookmarkedMovies.contains(movie.movieCd)) {
+            // 이미 북마크한 영화
+            bookmarkButton.setEnabled(false);
+            bookmarkButton.setText("북마크 추가됨");
+        } else {
+            // 북마크하지 않은 영화
+            bookmarkButton.setEnabled(true);
+            bookmarkButton.setText("북마크 추가");
+        }
     }
     
     /**

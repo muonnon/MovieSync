@@ -90,14 +90,22 @@ public class DatabaseManager {
     
     // ========== Users 테이블 관련 메소드 ==========
     
-    // 사용자 생성 (로그인)
+    /**
+     * 사용자 생성 또는 기존 사용자 조회 (로그인)
+     * 닉네임이 이미 존재하면 기존 userId 반환, 없으면 새로 생성
+     * @param username 닉네임
+     * @return userId (성공 시), -1 (실패 시)
+     */
     public int createUser(String username) {
         try {
-            // 중복 체크
-            if (isUsernameTaken(username)) {
-                return -1; // 중복된 닉네임
+            // 기존 사용자 확인 - 있으면 기존 userId 반환
+            int existingUserId = getUserIdByUsername(username);
+            if (existingUserId > 0) {
+                System.out.println("DB> 기존 사용자 로그인: " + username + " (ID: " + existingUserId + ")");
+                return existingUserId;
             }
             
+            // 새 사용자 생성
             String sql = "INSERT INTO Users (username) VALUES (?)";
             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, username);
@@ -115,6 +123,32 @@ public class DatabaseManager {
             pstmt.close();
         } catch (SQLException e) {
             System.err.println("DB> 사용자 생성 실패: " + e.getMessage());
+        }
+        return -1;
+    }
+    
+    /**
+     * 닉네임으로 userId 조회
+     * @param username 닉네임
+     * @return userId (존재 시), -1 (없을 시)
+     */
+    public int getUserIdByUsername(String username) {
+        try {
+            String sql = "SELECT user_id FROM Users WHERE username = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                int userId = rs.getInt("user_id");
+                rs.close();
+                pstmt.close();
+                return userId;
+            }
+            rs.close();
+            pstmt.close();
+        } catch (SQLException e) {
+            System.err.println("DB> 사용자 조회 실패: " + e.getMessage());
         }
         return -1;
     }

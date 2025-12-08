@@ -216,17 +216,17 @@ class ConnectedClient extends Thread {
         }
     }
     
-    // LOGIN//닉네임//END
+    // LOGIN|닉네임|END
     private void handleLogin(String msg) {
         String username = tk.findUsername(msg);
         
-        // 중복 체크
-        if (server.dbManager.isUsernameTaken(username)) {
-            sendMessage(mb.loginFailMSG("이미 사용 중인 닉네임입니다"));
+        // 현재 접속 중인 사용자인지 확인 (동시 접속 방지)
+        if (server.clientMap.containsKey(username)) {
+            sendMessage(mb.loginFailMSG("이미 접속 중인 닉네임입니다"));
             return;
         }
         
-        // 사용자 생성
+        // 사용자 생성 또는 기존 사용자 조회
         int userId = server.dbManager.createUser(username);
         if (userId > 0) {
             this.username = username;
