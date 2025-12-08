@@ -166,14 +166,26 @@ public class MainFrame extends JFrame {
         }
     }
     
-    // 특정 영화의 채팅방으로 이동
+    /**
+     * 특정 영화의 채팅방으로 이동
+     * @param movieCd 영화 코드
+     * @param movieNm 영화 제목
+     */
     public void showChatRoom(String movieCd, String movieNm) {
+        // JTree 선택 해제 (다른 메뉴 클릭 시 이벤트 발생하도록)
+        menuTree.clearSelection();
         cardLayout.show(contentPanel, "CHAT");
         chatPanel.joinRoom(movieCd, movieNm);
     }
     
-    // 특정 영화의 감상평으로 이동
+    /**
+     * 특정 영화의 감상평으로 이동
+     * @param movieCd 영화 코드
+     * @param movieNm 영화 제목
+     */
     public void showReviews(String movieCd, String movieNm) {
+        // JTree 선택 해제 (다른 메뉴 클릭 시 이벤트 발생하도록)
+        menuTree.clearSelection();
         cardLayout.show(contentPanel, "REVIEW");
         reviewPanel.loadReviews(movieCd, movieNm);
     }

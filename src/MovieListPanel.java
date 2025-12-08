@@ -206,6 +206,9 @@ public class MovieListPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if (selectedMovieCd != null) {
                     client.addBookmark(selectedMovieCd);
+                    // 북마크 추가 후 버튼 비활성화 (중복 추가 방지)
+                    bookmarkButton.setEnabled(false);
+                    bookmarkButton.setText("북마크 추가됨");
                     JOptionPane.showMessageDialog(MovieListPanel.this, "북마크에 추가되었습니다!");
                 }
             }
@@ -247,7 +250,10 @@ public class MovieListPanel extends JPanel {
         // 버튼 활성화
         chatButton.setEnabled(true);
         reviewButton.setEnabled(true);
+        
+        // 북마크 버튼 초기화 (다른 영화 선택 시 다시 활성화)
         bookmarkButton.setEnabled(true);
+        bookmarkButton.setText("북마크 추가");
     }
     
     /**
