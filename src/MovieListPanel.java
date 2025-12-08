@@ -9,6 +9,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 영화 목록을 테이블로 표시하는 패널
@@ -59,8 +61,12 @@ public class MovieListPanel extends JPanel {
         // ========== 상단 영역: 타이틀 + 새로고침 버튼 ==========
         JPanel topPanel = new JPanel(new BorderLayout());
         
-        // 헤더 레이블
-        JLabel headerLabel = new JLabel("실시간 박스오피스 Top 10");
+        // 오늘 날짜 구하기
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String today = sdf.format(new Date());
+        
+        // 헤더 레이블 (날짜 포함)
+        JLabel headerLabel = new JLabel("실시간 박스오피스 Top 10 (" + today + ")");
         headerLabel.setFont(new Font("맑은 고딕", Font.BOLD, 20));
         topPanel.add(headerLabel, BorderLayout.WEST);
         
