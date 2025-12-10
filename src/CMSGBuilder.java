@@ -15,8 +15,6 @@ public class CMSGBuilder {
     
     /**
      * 로그인 메시지 생성
-     * @param username 사용할 닉네임
-     * @return LOGIN|닉네임|END
      */
     public String loginMSG(String username) {
         return "LOGIN|" + username + "|END";
@@ -52,6 +50,11 @@ public class CMSGBuilder {
         return "GET_REVIEWS|" + movieCd + "|END";
     }
     
+    
+    // GET_ALL_REVIEWS|END
+    public String getAllReviewsMSG() {
+        return "GET_ALL_REVIEWS|END";
+    }
     // SUBMIT_REVIEW|영화코드|별점|감상평내용|END
     public String submitReviewMSG(String movieCd, int rating, String content) {
         return "SUBMIT_REVIEW|" + movieCd + "|" + rating + "|" + content + "|END";

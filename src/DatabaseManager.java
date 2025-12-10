@@ -93,8 +93,6 @@ public class DatabaseManager {
     /**
      * 사용자 생성 또는 기존 사용자 조회 (로그인)
      * 닉네임이 이미 존재하면 기존 userId 반환, 없으면 새로 생성
-     * @param username 닉네임
-     * @return userId (성공 시), -1 (실패 시)
      */
     public int createUser(String username) {
         try {
@@ -129,8 +127,6 @@ public class DatabaseManager {
     
     /**
      * 닉네임으로 userId 조회
-     * @param username 닉네임
-     * @return userId (존재 시), -1 (없을 시)
      */
     public int getUserIdByUsername(String username) {
         try {
@@ -300,6 +296,22 @@ public class DatabaseManager {
             return pstmt.executeQuery();
         } catch (SQLException e) {
             System.err.println("DB> 감상평 조회 실패: " + e.getMessage());
+            return null;
+        }
+    }
+    
+    // 전체 감상평 조회 (영화 정보 포함)
+    public ResultSet getAllReviews() {
+        try {
+            String sql = "SELECT r.review_id, m.movie_nm, u.username, r.rating, r.content, r.created_at " +
+                         "FROM Reviews r " +
+                         "JOIN Users u ON r.user_id = u.user_id " +
+                         "JOIN Movies m ON r.movie_cd = m.movie_cd " +
+                         "ORDER BY r.created_at DESC";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            return pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.err.println("DB> 전체 감상평 조회 실패: " + e.getMessage());
             return null;
         }
     }

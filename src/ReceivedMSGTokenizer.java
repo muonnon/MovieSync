@@ -17,8 +17,6 @@ public class ReceivedMSGTokenizer {
     
     /**
      * 메시지 타입을 감지하여 번호로 반환 (0~13)
-     * @param _msg 수신된 메시지
-     * @return 메시지 타입 번호 (MSGTable 참고)
      */
     public int detection(String _msg) {
         int result = -1;

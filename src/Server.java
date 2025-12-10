@@ -172,31 +172,35 @@ class ConnectedClient extends Thread {
                         handleGetReviews(msg);
                         break;
                         
-                    case 7: // SUBMIT_REVIEW
+                    case 7: // GET_ALL_REVIEWS
+                        handleGetAllReviews();
+                        break;
+                        
+                    case 8: // SUBMIT_REVIEW
                         handleSubmitReview(msg);
                         break;
                         
-                    case 8: // DELETE_REVIEW
+                    case 9: // DELETE_REVIEW
                         handleDeleteReview(msg);
                         break;
                         
-                    case 9: // SEARCH_MOVIE
+                    case 10: // SEARCH_MOVIE
                         handleSearchMovie(msg);
                         break;
                         
-                    case 10: // ADD_BOOKMARK
+                    case 11: // ADD_BOOKMARK
                         handleAddBookmark(msg);
                         break;
                         
-                    case 11: // DELETE_BOOKMARK
+                    case 12: // DELETE_BOOKMARK
                         handleDeleteBookmark(msg);
                         break;
                         
-                    case 12: // GET_BOOKMARKS
+                    case 13: // GET_BOOKMARKS
                         handleGetBookmarks();
                         break;
                         
-                    case 13: // DISCONNECT
+                    case 14: // DISCONNECT
                         handleDisconnect();
                         return;
                         
@@ -313,11 +317,19 @@ class ConnectedClient extends Thread {
         
         String roomId = "room_" + movieCd;
         ChatRoom room = server.getOrCreateRoom(roomId);
-        room.addUser(this);
         
+        // 먼저 입장 성공 메시지 전송
         sendMessage(mb.roomOkMSG(roomId, movieNm));
         
-        // 다른 사용자들에게 입장 알림
+        // 기존 접속자들을 새 유저에게 알림
+        for (ConnectedClient existingUser : room.getUsers()) {
+            sendMessage(mb.userJoinMSG(existingUser.username, room.getUserCount()));
+        }
+        
+        // 방에 추가
+        room.addUser(this);
+        
+        // 다른 사용자들에게 새 유저 입장 알림 (브로드캐스트)
         String joinMsg = mb.userJoinMSG(username, room.getUserCount());
         room.broadcast(joinMsg);
         
@@ -385,6 +397,31 @@ class ConnectedClient extends Thread {
         } catch (Exception e) {
             System.err.println("Server> 감상평 조회 실패: " + e.getMessage());
             sendMessage(mb.errorMSG("감상평 조회 실패"));
+        }
+    }
+    
+    // GET_ALL_REVIEWS|END - 전체 감상평 조회
+    private void handleGetAllReviews() {
+        try {
+            // 모든 감상평 조회 (영화 정보 포함)
+            ResultSet rs = server.dbManager.getAllReviews();
+            
+            while (rs.next()) {
+                int reviewId = rs.getInt("review_id");
+                String movieNm = rs.getString("movie_nm");
+                String reviewUsername = rs.getString("username");
+                int rating = rs.getInt("rating");
+                String content = rs.getString("content");
+                String createdAt = rs.getString("created_at");
+                
+                sendMessage(mb.allReviewDataMSG(reviewId, movieNm, reviewUsername, rating, content, createdAt));
+            }
+            
+            sendMessage(mb.allReviewEndMSG());
+            rs.close();
+        } catch (Exception e) {
+            System.err.println("Server> 전체 감상평 조회 실패: " + e.getMessage());
+            sendMessage(mb.errorMSG("전체 감상평 조회 실패"));
         }
     }
     
@@ -477,41 +514,35 @@ class ConnectedClient extends Thread {
         }
     }
     
-    // GET_BOOKMARKS//END
+    // GET_BOOKMARKS|END
     private void handleGetBookmarks() {
         try {
             ResultSet rs = server.dbManager.getBookmarks(userId);
             
             int count = 0;
+            ArrayList<String> movieCodes = new ArrayList<String>();
             while (rs.next()) {
                 count++;
+                movieCodes.add(rs.getString("movie_cd"));
+            }
+            rs.close();
+            
+            // 북마크 개수 전송
+            sendMessage(mb.bookmarkCountMSG(count));
+            
+            // 북마크한 영화 코드들 전송
+            for (String movieCd : movieCodes) {
+                sendMessage(mb.bookmarkDataMSG(movieCd));
             }
             
-            rs.close();
-            rs = server.dbManager.getBookmarks(userId);
+            // 전송 완료
+            sendMessage(mb.bookmarkEndMSG());
             
-            sendMessage(mb.moviesCountMSG(count));
-            
-            while (rs.next()) {
-                String movieCd = rs.getString("movie_cd");
-                String movieNm = rs.getString("movie_nm");
-                int rank = rs.getInt("rank");
-                String openDt = rs.getString("open_dt");
-                long audiAcc = rs.getLong("audi_acc");
-                long salesAcc = rs.getLong("sales_acc");
-                
-                sendMessage(mb.movieDataMSG(movieCd, movieNm, rank, openDt, audiAcc, salesAcc));
-            }
-            
-            sendMessage(mb.moviesEndMSG());
-            rs.close();
         } catch (Exception e) {
             System.err.println("Server> 북마크 조회 실패: " + e.getMessage());
             sendMessage(mb.errorMSG("북마크 조회 실패"));
         }
     }
-    
-    // DISCONNECT//END
     private void handleDisconnect() {
         sendMessage(mb.disconnectOkMSG());
         System.out.println("Server> " + username + " 연결 종료 요청");
@@ -570,5 +601,9 @@ class ChatRoom {
     
     public int getUserCount() {
         return users.size();
+    }
+    
+    public ArrayList<ConnectedClient> getUsers() {
+        return users;
     }
 }

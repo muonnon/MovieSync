@@ -1,24 +1,10 @@
 //프로젝트 이름 : MovieSync
 //개발자 : 권미리
 //개발 기간: 2025.12.01 ~ 2025.12.13
-// 서버가 클라이언트에게 보낼 메시지를 정의하는 클래스
-// 메시지 구분자: | (파이프)
 
-/**
- * 서버 -> 클라이언트 메시지 빌더
- * 프로토콜에 맞게 응답 메시지를 생성한다
- * 형식: 태그|데이터|데이터|...|END
- */
 public class MSGBuilder {
     
-    // ===== 로그인 관련 메시지 =====
-    
-    /**
-     * 로그인 성공 메시지 생성
-     * @param userId 부여된 사용자 ID
-     * @param username 닉네임
-     * @return LOGIN_OK|사용자ID|닉네임 확인 완료|END
-     */
+    // LOGIN_OK|userId|닉네임 확인 완료|END
     String loginOkMSG(int userId, String username) {
         return "LOGIN_OK|" + userId + "|" + username + " 확인 완료|END";
     }
@@ -98,6 +84,17 @@ public class MSGBuilder {
         return "REV_END|END";
     }
     
+    // ALL_REV_DATA|reviewId|영화제목|작성자|별점|내용|작성일시|END
+    String allReviewDataMSG(int reviewId, String movieNm, String username, int rating, String content, String createdAt) {
+        return "ALL_REV_DATA|" + reviewId + "|" + movieNm + "|" + username + "|" + rating + "|" + 
+               content + "|" + createdAt + "|END";
+    }
+    
+    // ALL_REV_END|END
+    String allReviewEndMSG() {
+        return "ALL_REV_END|END";
+    }
+    
     // REV_OK|reviewId|감상평이 저장되었습니다|END
     String reviewOkMSG(int reviewId) {
         return "REV_OK|" + reviewId + "|감상평이 저장되었습니다|END";
@@ -116,6 +113,21 @@ public class MSGBuilder {
     // DEL_FAIL|에러메시지|END
     String deleteFailMSG(String reason) {
         return "DEL_FAIL|" + reason + "|END";
+    }
+    
+    // BOOKMARK_COUNT|개수|END
+    String bookmarkCountMSG(int count) {
+        return "BOOKMARK_COUNT|" + count + "|END";
+    }
+    
+    // BOOKMARK_DATA|영화코드|END
+    String bookmarkDataMSG(String movieCd) {
+        return "BOOKMARK_DATA|" + movieCd + "|END";
+    }
+    
+    // BOOKMARK_END|END
+    String bookmarkEndMSG() {
+        return "BOOKMARK_END|END";
     }
     
     // BOOKMARK_OK|북마크가 추가되었습니다|END

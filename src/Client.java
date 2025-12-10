@@ -34,7 +34,6 @@ public class Client {
     
     /**
      * GUI 콜백 설정 - 서버로부터 메시지를 받으면 콜백 호출
-     * @param callback 메시지 수신 시 호출되는 콜백
      */
     public void setMessageCallback(MessageCallback callback) {
         this.callback = callback;
@@ -47,8 +46,6 @@ public class Client {
     
     /**
      * 서버에 연결하고 로그인 메시지를 전송한다
-     * @param username 사용할 닉네임
-     * @return 연결 성공 여부
      */
     public boolean connectToServer(String username) {
         try {
@@ -121,6 +118,15 @@ public class Client {
     public void requestReviews(String movieCd) {
         try {
             dataOutStream.writeUTF(cmb.getReviewsMSG(movieCd));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // 전체 감상평 조회
+    public void requestAllReviews() {
+        try {
+            dataOutStream.writeUTF(cmb.getAllReviewsMSG());
         } catch (IOException e) {
             e.printStackTrace();
         }

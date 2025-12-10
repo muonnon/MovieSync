@@ -26,7 +26,6 @@ public class APIManager extends Thread {
     
     /**
      * 생성자
-     * @param dbManager 데이터베이스 관리자 객체
      */
     public APIManager(DatabaseManager dbManager) {
         this.dbManager = dbManager;
