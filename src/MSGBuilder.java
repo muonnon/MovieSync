@@ -140,6 +140,11 @@ public class MSGBuilder {
         return "BOOKMARK_DEL_OK|북마크가 삭제되었습니다|END";
     }
     
+    // BOOKMARK_DEL_FAIL|에러메시지|END
+    String bookmarkDelFailMSG(String reason) {
+        return "BOOKMARK_DEL_FAIL|" + reason + "|END";
+    }
+    
     // DISCONNECT_OK|연결이 종료되었습니다|END
     String disconnectOkMSG() {
         return "DISCONNECT_OK|연결이 종료되었습니다|END";
